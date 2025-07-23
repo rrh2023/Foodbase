@@ -34,6 +34,9 @@ const RecipesState = props => {
         // API CALL
         const url = `https://api.edamam.com/api/recipes/v2?q=${text}&type=public&app_id=${appId}&app_key=${appKey}`
         const res = await axios.get(url); 
+        const res2 = await fetch("http://127.0.0.1:5000/contacts")
+
+        console.log(res2)
 
         dispatch({
             type: SEARCH_RECIPES,

@@ -69,16 +69,17 @@ const Recipe = () => {
           </ul>
         </div>
       </div>
-      <div className='card text-center'>
-        {
-          recipe.digest && <>
-                  <div className='badge badge-dark'>Calories: {Math.round(100 * recipe.calories)/100}</div>
-                  <div className='badge badge-primary'>Fat: {Math.round(100 * recipe.digest[0].total)/100} grams</div>
-                  <div className='badge badge-success'>Protein: {Math.round(100 * recipe.digest[2].total)/100} grams</div>
-                  <div className='badge badge-light'>Carbohydrates: {Math.round(100 * recipe.digest[1].total)/100} grams</div>
-          </>
-        }
+      {
+        recipe.digest && <>
+        <div className='card text-center'>
+          <div className='badge badge-dark'>Calories: {Math.round(100 * recipe.calories)/100}</div>
+          <div className='badge badge-primary'>Fat: {Math.round(100 * recipe.digest[0].total)/100} grams</div>
+          <div className='badge badge-success'>Protein: {Math.round(100 * recipe.digest[2].total)/100} grams</div>
+          <div className='badge badge-light'>Carbohydrates: {Math.round(100 * recipe.digest[1].total)/100} grams</div>
       </div>
+        </>
+      }
+      
     </Fragment>
   );
 };
