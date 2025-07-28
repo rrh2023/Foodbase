@@ -22,6 +22,8 @@ const RecipesState = props => {
         isFavorited: false
     };
 
+    const server = 'http://127.0.0.1:5000'
+
     const appId = import.meta.env.VITE_APP_ID
     const appKey = import.meta.env.VITE_APP_KEY
 
@@ -32,15 +34,11 @@ const RecipesState = props => {
         setLoading();
 
         // API CALL
-        const url = `https://api.edamam.com/api/recipes/v2?q=${text}&type=public&app_id=${appId}&app_key=${appKey}`
-        const res = await axios.get(url); 
-        const res2 = await fetch("http://127.0.0.1:5000/contacts")
-
-        console.log(res2)
+        const recipes = await axios.get(`${server}/search_recipes/${text}`)
 
         dispatch({
             type: SEARCH_RECIPES,
-            payload: res.data.hits
+            payload: recipes.data
         })
     }
 
@@ -49,52 +47,77 @@ const RecipesState = props => {
         setLoading()
 
         // API CALL
-        const url = `https://api.edamam.com/api/recipes/v2/${recipeId}?app_id=${appId}&app_key=82b15839172e88a1d2ffd5c56edbba5c`
-        const res = await axios.get(url)
-
-        console.log(res.data.recipe)
+        const recipe = await axios.get(`${server}/get_recipe/${recipeId}`)
 
         dispatch({
             type: GET_RECIPE,
-            payload: res.data.recipe
+            payload: recipe.data
         })
     }
 
     // Favorite Recipe
     const favoriteRecipe = async recipe => {
-        const alreadyFavorited = state.favoriteRecipes.some(favRecipe => favRecipe.uri === recipe.uri)
+        try {
+            await axios.post(`${server}/favorite_recipe/${recipe.uri.substring(51)}`)
+            const favRecipes = await axios.get(`${server}/get_favorite_recipes`)
 
-        if (alreadyFavorited == false) state.favoriteRecipes.push(recipe)
-    
-        dispatch({
-            type: FAVORITE_RECIPE
-        })
+            dispatch({
+                type: FAVORITE_RECIPE,
+                payload: favRecipes.data
+            })
+        } catch (error) {
+            if(error.response){
+                console.error("Server Error:", error.response.data)
+                console.error("Server Code:", error.response.status)
+            }else if (error.request){
+                console.error("Request Setup Error:", error.request)
+            }else{
+                console.error("Request Setup Error:", error.message)
+            }
+        }
     }
 
     // Delete Recipe
-    const deleteRecipe = recipe => {
-        state.favoriteRecipes = state.favoriteRecipes.filter(favRecipe => favRecipe.uri != recipe.uri)
+    const deleteRecipe = async id => {
+        try {
+            await axios.delete(`${server}/delete_recipe/${id}`)
+            const favRecipes = await axios.get(`${server}/get_favorite_recipes`)
 
-        dispatch({
-            type: DELETE_RECIPE
-        })
+            dispatch({
+                type: DELETE_RECIPE,
+                payload: favRecipes.data
+            })
+        } catch (error) {
+            if(error.response){
+                console.error("Server Error:", error.response.data)
+                console.error("Server Code:", error.response.status)
+            }else if (error.request){
+                console.error("Request Setup Error:", error.request)
+            }else{
+                console.error("Request Setup Error:", error.message)
+            }
+        }        
     }
 
     // Get Favorite Recipes
-    const getFavoriteRecipes = () => {
+    const getFavoriteRecipes = async () => {
         setLoading()
-
+        const favRecipes = await axios.get(`${server}/get_favorite_recipes`)
         dispatch({
             type: GET_FAVORITE_RECIPES,
-            payload: state.favoriteRecipes
+            payload: favRecipes.data
         })
     }
 
     // Clear Favorite Recipes
-    const clearFavoriteRecipes = () => dispatch({ type: CLEAR_FAVORITE_RECIPES});
+    const clearFavoriteRecipes = async () => {
+        setLoading()
+        await axios.delete(`${server}/clear_recipes`)
+        dispatch({type: CLEAR_FAVORITE_RECIPES});
+    }
 
     // Clear Recipes
-    const clearRecipes = () => dispatch({ type: CLEAR_RECIPES});
+    const clearRecipes = () => dispatch({type: CLEAR_RECIPES});
 
     // Set Loading
     const setLoading = () => dispatch({type: SET_LOADING});

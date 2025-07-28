@@ -26,11 +26,14 @@ const recipesReducer = (state, action) => {
         case FAVORITE_RECIPE:
             return {
                 ...state,
+                favoriteRecipes: action.payload,
                 loading: false
             }
         case DELETE_RECIPE:
             return {
-                ...state
+                ...state,
+                favoriteRecipes: action.payload,
+                loading: false
             }
         case GET_FAVORITE_RECIPES:
             return {

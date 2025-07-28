@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const RecipeItem = ({recipe, id}) => {
   useEffect(() => {
-    }, []);
+  }, []);
 
     const {
       images,
