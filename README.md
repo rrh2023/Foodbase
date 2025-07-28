@@ -13,5 +13,5 @@ A full-stack app where users can search for & favorite different types of recipe
 
 ## External Resources
 
-- [React Front To Back](https://www.udemy.com/course/modern-react-front-to-back)
+- [Brad Traversy's React Front To Back](https://www.udemy.com/course/modern-react-front-to-back)
   - Referenced as a guide to create the UI
