@@ -1,4 +1,5 @@
 # Foodbase
+A full-stack app where users can search for & favorite different types of recipes from the Edamam API.
 
 ## Tech Stack
 
